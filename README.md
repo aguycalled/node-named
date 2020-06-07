@@ -86,3 +86,9 @@ basis).
 
 There are a few handy ways to lookup DNS records in node. 
 https://github.com/LCMApps/dns-lookup-cache
+
+## Disabling resolved
+
+sudo systemctl disable systemd-resolved
+sudo systemctl stop systemd-resolved
+echo "nameserver 8.8.8.8" >> /etc/resolv.conf
