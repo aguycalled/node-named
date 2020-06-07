@@ -9,9 +9,15 @@ server.listen(53, '0.0.0.0', function() {
 
 server.on('query', function(query) {
   var domain = query.name();
-  console.log('DNS Query: %s', domain)
+  var type = query.type();
+  console.log('DNS %s Query: %s', type, domain)
   if (domain.endsWith(suffix)) {
-    query.addAnswer( domain, new named.ARecord(domain.substring(0, domain.length - suffix.length), ttl ) );
-    server.send(query);
+    if (type == 'CAA') {
+      query.addAnswer( domain, new named.CAARecord(0, "issuewild",'letsencrypt.org'));
+      server.send(query);
+    } else if (type == 'A') {
+      query.addAnswer( domain, new named.ARecord(domain.substring(0, domain.length - suffix.length), ttl ) );
+      server.send(query);
+    }
   }
 });
